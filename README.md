@@ -15,7 +15,7 @@ Installation
 
 Download and build from source:
 	
-	git clone git@github.com:eamars/webserver.git
+	git clone git@github.com:eamars/nhentai_crawer.git
 
 Python Web Crawer requires bs4, mysql.connector for external functions
 
