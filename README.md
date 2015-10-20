@@ -29,9 +29,9 @@ NUM_WORKERS = 10
 DB_NAME = "nhentai"
 TABLE_NAME = "downloaded"
 SQL_CONFIG = {
-	    "host": "192.168.2.5",
-	    "user": "eamars",
-	    "password": "931105",
+	    "host": "localhost",
+	    "user": "username",
+	    "password": "password",
 	    "autocommit": True
 }
 ```
