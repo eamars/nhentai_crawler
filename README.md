@@ -36,6 +36,10 @@ SQL_CONFIG = {
 }
 ```
 
+Before running, you need to specify the tags and page number in code. In example, "chinese" and page i were used
+
+	tasks = get_page_content("chinese", str(i))
+
 To start crawer, you need to run script with Python3 interpreter
 
 	python3 main.py
