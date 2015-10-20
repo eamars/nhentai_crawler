@@ -9,17 +9,7 @@ import os
 import re
 import hashlib
 from sql import *
-
-
-NUM_WORKERS = 10
-DB_NAME = "nhentai"
-TABLE_NAME = "downloaded"
-SQL_CONFIG = {
-    "host": "localhost",
-    "user": "username",
-    "password": "password",
-    "autocommit": True
-}
+from settings import *
 
 
 def md5(string):
@@ -196,7 +186,7 @@ def main():
         thread_pool.append(thread)
 
     # Assign tasks
-    for i in range(1, 5):
+    for i in range(1, 2):
         tasks = get_page_content("chinese", str(i))
         for task in tasks:
             # Test if already exists
