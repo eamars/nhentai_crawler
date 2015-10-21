@@ -1,4 +1,5 @@
 import mysql.connector
+from settings import *
 
 
 SQL_CREATE_TABLE = \
@@ -63,7 +64,7 @@ def connect_database(connection, database_name):
 def entry_exists(connection, table_name, condition):
     cursor = connection.cursor()
 
-    sql = "SELECT EXISTS(SELECT 1 FROM {} WHERE {})".format(table_name, condition)
+    sql = "SELECT COUNT(*) FROM `{}` WHERE {}".format(table_name, condition)
     # print(sql)
     try:
         cursor.execute(sql)
@@ -113,7 +114,12 @@ def insert_entry(connection, table_name, value):
 
 
 def main():
-    pass
+    connection = establish_connection(SQL_CONFIG)
+    connect_database(connection, DB_NAME)
+
+    print(entry_exists(connection, "downloaded", "md5hash='56939abad8365027095a57b65694e7ce'"))
+    close_connection(connection)
+
 
 if __name__ == "__main__":
     main()
