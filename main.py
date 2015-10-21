@@ -157,6 +157,15 @@ def get_album_image(thread_id, task):
     close_connection(connection)
 
 
+# Crawer
+def crawer(thread_id, task):
+    # Make sure getting correct object
+    assert isinstance(task, dict)
+
+    get_cover_image(thread_id, task)
+    get_album_image(thread_id, task)
+
+
 # Workers
 def worker(args):
     task_queue = args
@@ -172,15 +181,19 @@ def worker(args):
         if task is None:
             break
 
-        # Make sure getting correct object
-        assert isinstance(task, dict)
         print(thread_id, "receive", task)
 
-        # Task start
-        get_cover_image(thread_id, task)
-        get_album_image(thread_id, task)
+        # ============= Task start =============
 
-        # Task end
+        # Safely execute user code
+        try:
+            crawer(thread_id, task)
+
+        # Print error only
+        except Exception as e:
+            print(thread_id, "error", e)
+
+        # ============== Task end ==============
         task_queue.task_done()
         print(thread_id, "done")
     print(thread_id, "exits")
