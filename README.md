@@ -1,9 +1,9 @@
 Python Web Crawer
 =================
 
-Acknowledge: Webpage may contain materials that are not suitable for you. 
+Acknowledgment: Webpage may contain materials that are not suitable for you. 
 
-A simple multi-process web crawers that downloads comics from [nhentai (NSFW)](http://nhentai.net)
+A simple multi-thread web crawers that downloads comics from [nhentai (NSFW)](http://nhentai.net)
 
 Features:
 - Download comics from with certain tags
