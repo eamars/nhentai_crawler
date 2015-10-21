@@ -27,7 +27,23 @@ def http_request(url):
     request.add_header("Accept-Language", "en,zh-CN;q=0.8,zh;q=0.6")
 
     # Get http response
-    response = urllib.request.urlopen(request)
+    response = None
+    while True:
+        try:
+            response = urllib.request.urlopen(request)
+            break
+
+        # Handle http error
+        except urllib.request.HTTPError as e:
+            if e.code == 404:
+                break
+            print("Error: http error, retry in few seconds: ", e)
+            time.sleep(BACKOFF_TIMER)
+
+        # Handle other unknown errors
+        except Exception as e:
+            print("Error: network error, retry in few seconds: ", e)
+            time.sleep(BACKOFF_TIMER)
 
     return response
 
@@ -38,11 +54,7 @@ def get_page_content(tags, page_num):
     # Page template
     url = "http://nhentai.net/search/?q={}&page={}".format(tags, page_num)
 
-    try:
-        response = http_request(url)
-    except Exception as e:
-        print(e)
-        return None
+    response = http_request(url)
 
     # Decompress response and decode into plain string
     buffer = gzip.decompress(response.read()).decode("utf-8")
@@ -86,8 +98,12 @@ def get_cover_image(thread_id, task):
     url = http_template + task["cover"]
     response = http_request(url)
 
-    cover_fp.write(response.read())
-    cover_fp.close()
+    if response is None:
+        print("Cover doesn't exist, skip")
+        cover_fp.close()
+    else:
+        cover_fp.write(response.read())
+        cover_fp.close()
 
 
 def get_album_image(thread_id, task):
@@ -106,9 +122,11 @@ def get_album_image(thread_id, task):
     while True:
         image_url = "{}{}/".format(url, i)
         print(thread_id, "downloading from ", image_url)
-        try:
-            response = http_request(image_url)
-        except Exception as e:
+
+        response = http_request(image_url)
+
+        # Download complete
+        if response is None:
             break
 
         buffer = gzip.decompress(response.read()).decode("utf-8")
@@ -186,8 +204,13 @@ def main():
         thread_pool.append(thread)
 
     # Assign tasks
-    for i in range(1, 2):
+
+    # Get pages
+    for i in range(1, 20):
         tasks = get_page_content("chinese", str(i))
+
+        assert isinstance(tasks, list)
+
         for task in tasks:
             # Test if already exists
             md5string = md5(task["caption"].encode())
@@ -197,7 +220,7 @@ def main():
             # If entry is already downloaded, then skip,
             # otherwise the entry is added into downloading queue
             if not entry_exists(connection, TABLE_NAME, sql_cond):
-                print("Downloading album: [{}]".format(task["caption"]))
+                print("Album download: [{}]".format(task["caption"]))
                 task_queue.put(task)
 
             else:

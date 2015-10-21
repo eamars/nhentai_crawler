@@ -9,6 +9,9 @@ DB_NAME = "nhentai"
 # Table name in MySQL database
 TABLE_NAME = "downloaded"
 
+# Specify how long the program should wait when network error occurs
+BACKOFF_TIMER = 5
+
 # Connection configuration for MySQL Connection
 SQL_CONFIG = {
     "host": "localhost",
