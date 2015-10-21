@@ -59,4 +59,5 @@ docs/_build/
 target/
 
 # Project specified
-downloaded/
+download/*
+.idea/*
