@@ -162,6 +162,7 @@ def crawer(thread_id, task):
     # Make sure getting correct object
     assert isinstance(task, dict)
 
+    # Get images in album
     get_cover_image(thread_id, task)
     get_album_image(thread_id, task)
 
@@ -181,7 +182,11 @@ def worker(args):
         if task is None:
             break
 
+        # Print accepted task
         print(thread_id, "receive", task)
+
+        # Print approximate number of tasks left in the queue
+        print(thread_id, "{} tasks left".format(task_queue.qsize()))
 
         # ============= Task start =============
 
@@ -219,7 +224,7 @@ def main():
     # Assign tasks
 
     # Get pages
-    for i in range(1, 20):
+    for i in range(1, 35):
         tasks = get_page_content("chinese", str(i))
 
         assert isinstance(tasks, list)
@@ -238,6 +243,9 @@ def main():
 
             else:
                 print("Album skip: [{}]".format(task["caption"]))
+
+    # Approximate number of tasks in the queue
+    print("{} tasks were assigned to workers".format(task_queue.qsize()))
 
     # Complete tasks
     for n in range(NUM_WORKERS):
