@@ -157,8 +157,8 @@ def get_album_image(thread_id, task):
     close_connection(connection)
 
 
-# Crawer
-def crawer(thread_id, task):
+# Crawler
+def crawler(thread_id, task):
     # Make sure getting correct object
     assert isinstance(task, dict)
 
@@ -192,7 +192,7 @@ def worker(args):
 
         # Safely execute user code
         try:
-            crawer(thread_id, task)
+            crawler(thread_id, task)
 
         # Print error only
         except Exception as e:
