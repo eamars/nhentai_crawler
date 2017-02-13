@@ -1,3 +1,5 @@
+__author__ = "Ran Bao"
+
 import mysql.connector
 from settings import *
 
